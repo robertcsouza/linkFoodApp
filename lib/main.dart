@@ -51,7 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: input(context: context, lable: 'email'),
                 ),
                 input(context: context, lable: 'senha'),
+                btPrimary(context: context, lable: 'Entrar', call: _ca())
               ],
             )));
+  }
+
+  String _ca() {
+    print('debug');
+    return 'deubg';
+  }
+
+  Widget btPrimary({context, String? lable, call}) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        child: ElevatedButton(
+            onPressed: () {
+              call();
+            },
+            child: Text('Entar')));
   }
 }
