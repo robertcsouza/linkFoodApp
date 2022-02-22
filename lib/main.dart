@@ -1,6 +1,9 @@
+import 'package:linkfood/config/Routes.dart';
+
+import '../assets/Colors.dart' as projectColor;
 import 'package:flutter/material.dart';
 import 'package:linkfood/components/Inputs.dart';
-import 'assets/Colors.dart' as projectColor;
+import 'components/buttons.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Link Food',
+      initialRoute: '/',
+      routes: routes(),
+      theme: ThemeData(primarySwatch: Colors.green, accentColor: Colors.blue),
+      home: MyHomePage(title: 'Link Food'),
     );
   }
 }
@@ -30,45 +33,54 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  void _callRegister({required context}) {
+    Navigator.pushNamed(context, '/register');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 128.0),
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    child: Image.asset('images/logo.png'),
-                  ),
+        body: SingleChildScrollView(
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 128.0),
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  child: Image.asset('images/logo.png'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50.0, bottom: 32),
-                  child: input(context: context, lable: 'email'),
-                ),
-                input(context: context, lable: 'senha'),
-                btPrimary(context: context, lable: 'Entrar', call: _ca())
-              ],
-            )));
-  }
-
-  String _ca() {
-    print('debug');
-    return 'deubg';
-  }
-
-  Widget btPrimary({context, String? lable, call}) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 50,
-        child: ElevatedButton(
-            onPressed: () {
-              call();
-            },
-            child: Text('Entar')));
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0, bottom: 16),
+                child: input(context: context, lable: 'email'),
+              ),
+              input(context: context, lable: 'senha'),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 64.0, left: 16.0, right: 16.0),
+                child: btPrimary(
+                    context: context,
+                    lable: 'Login',
+                    call: () {
+                      _callRegister(context: context);
+                    },
+                    textStyle: TextStyle(fontSize: 18)),
+              ),
+              btText(
+                  lable: 'Cadastre-se',
+                  call: () {
+                    _callRegister(context: context);
+                  },
+                  textStyle: TextStyle(
+                      color: projectColor.primary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold))
+            ],
+          )),
+    ));
   }
 }
