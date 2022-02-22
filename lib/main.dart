@@ -37,6 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pushNamed(context, '/register');
   }
 
+  void _callInitial({required context}) {
+    Navigator.pushReplacementNamed(context, '/initial');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context: context,
                     lable: 'Login',
                     call: () {
-                      _callRegister(context: context);
+                      _callInitial(context: context);
                     },
                     textStyle: TextStyle(fontSize: 18)),
               ),
