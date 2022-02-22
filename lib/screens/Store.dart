@@ -43,8 +43,64 @@ class _StoreState extends State<Store> {
             padding: const EdgeInsets.only(top: 32.0, left: 16),
             child: _customerInfo(),
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+            child: Text(
+              'Produtos',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          _listProducts()
         ],
       ),
+    );
+  }
+
+  Widget _listProducts() {
+    return Expanded(
+        child: ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return _cardProducts();
+      },
+    ));
+  }
+
+  Widget _cardProducts() {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 100,
+          child: ListTile(
+            onTap: () {},
+            leading: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                    width: 90,
+                    height: 90,
+                    child: Image.asset('images/pizza.jpg'))),
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                'Pizza Calabresa Grande',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.grey[800]),
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Mussarela,Calabresa,requeijão,cebola,azeite')),
+                Text(
+                  'R\$ 39.90',
+                  style: TextStyle(color: primary, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          )),
     );
   }
 
