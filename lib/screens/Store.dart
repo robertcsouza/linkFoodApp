@@ -21,6 +21,7 @@ class _StoreState extends State<Store> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
@@ -37,6 +38,34 @@ class _StoreState extends State<Store> {
                 child: _appBarCustom(),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, left: 16),
+            child: _customerInfo(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _customerInfo() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              'Dominos Pizzaria',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              '30-40 min   R\$ 7.00',
+              style: TextStyle(fontSize: 18),
+            ),
           )
         ],
       ),
@@ -66,7 +95,10 @@ class _StoreState extends State<Store> {
                     child: SizedBox(
                         width: 40,
                         height: 40,
-                        child: Icon(Icons.arrow_back_ios_new)),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: primary,
+                        )),
                   ),
                 ),
               ),
@@ -88,7 +120,10 @@ class _StoreState extends State<Store> {
                     child: SizedBox(
                         width: 40,
                         height: 40,
-                        child: Icon(Icons.favorite_border)),
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: primary,
+                        )),
                   ),
                 ),
               ),
