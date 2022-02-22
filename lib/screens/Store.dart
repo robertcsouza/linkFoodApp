@@ -75,7 +75,9 @@ class _StoreState extends State<Store> {
           width: MediaQuery.of(context).size.width,
           height: 100,
           child: ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/product/detail');
+            },
             leading: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: Container(
