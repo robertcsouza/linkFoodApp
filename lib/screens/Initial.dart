@@ -29,7 +29,7 @@ class _InitialState extends State<Initial> {
         centerTitle: true,
       ),
       body: _body(),
-      bottomNavigationBar: bottomNavigatior(index: 0),
+      bottomNavigationBar: bottomNavigatior(index: 0, context: context),
     );
   }
 

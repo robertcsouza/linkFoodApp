@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:linkfood/assets/Colors.dart';
 
-BottomNavigationBar bottomNavigatior({required int index}) {
+_redirect(index, context) {
+  switch (index) {
+    case 0:
+      Navigator.pushNamed(context, '/initial');
+      break;
+    case 1:
+      Navigator.pushNamed(context, '/initial');
+      break;
+    case 2:
+      Navigator.pushNamed(context, '/perfil');
+      break;
+    default:
+  }
+}
+
+BottomNavigationBar bottomNavigatior({required int index, required context}) {
   return BottomNavigationBar(
     items: const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
@@ -23,7 +38,7 @@ BottomNavigationBar bottomNavigatior({required int index}) {
     currentIndex: index,
     selectedItemColor: primary,
     onTap: (index) {
-      print(index);
+      _redirect(index, context);
     },
   );
 }
