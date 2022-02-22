@@ -16,6 +16,8 @@ class _StoreState extends State<Store> {
     );
   }
 
+  bool toggle = false;
+
   Widget _body() {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -115,13 +117,17 @@ class _StoreState extends State<Store> {
                   child: InkWell(
                     splashColor: primary, // Splash color
                     onTap: () {
-                      Navigator.pop(context);
+                      setState(() {
+                        toggle = !toggle;
+                      });
                     },
                     child: SizedBox(
                         width: 40,
                         height: 40,
                         child: Icon(
-                          Icons.favorite_border,
+                          toggle != false
+                              ? Icons.favorite_border
+                              : Icons.favorite,
                           color: primary,
                         )),
                   ),

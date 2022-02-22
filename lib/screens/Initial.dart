@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:linkfood/assets/Colors.dart';
+import 'package:linkfood/components/bottomNavigator.dart';
 
 class Initial extends StatefulWidget {
   const Initial({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _InitialState extends State<Initial> {
         centerTitle: true,
       ),
       body: _body(),
+      bottomNavigationBar: bottomNavigatior(index: 0),
     );
   }
 
@@ -161,7 +163,6 @@ class _InitialState extends State<Initial> {
         ));
   }
 }
-
 
 /*
 
