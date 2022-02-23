@@ -72,41 +72,74 @@ class _ProductDetailState extends State<ProductDetail> {
       height: 70,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      quant <= 0 ? quant = 0 : quant--;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.remove,
-                    size: 32,
-                    color: primary,
-                  )),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  quant.toString(),
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 32.0,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 0.5,
                 ),
               ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      quant++;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    size: 32,
-                    color: primary,
-                  )),
-            ],
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          quant <= 0 ? quant = 0 : quant--;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.remove,
+                        size: 32,
+                        color: primary,
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      quant.toString(),
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          quant++;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        size: 32,
+                        color: primary,
+                      )),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                width: 200,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text('Adicionar'), Text('R\$ 39.90')],
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(primary)),
+                )),
           )
         ],
       ),
@@ -233,7 +266,7 @@ class _ProductDetailState extends State<ProductDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Mussarela,calabresa,requeijão,cebola azeite',
+              'Mussarela,calabresa,requeij��o,cebola azeite',
               style: TextStyle(fontSize: 16),
             ),
           )
