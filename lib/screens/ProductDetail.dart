@@ -134,7 +134,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   onPressed: () {},
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Adicionar'), Text('R\$ 39.90')],
+                    children: [Text('Adicionar'), Text('R\$ 39.9')],
                   ),
                   style: ButtonStyle(
                       backgroundColor:

@@ -1,9 +1,10 @@
 import 'package:linkfood/config/Routes.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../assets/Colors.dart' as projectColor;
 import 'package:flutter/material.dart';
 import 'package:linkfood/components/Inputs.dart';
 import 'components/buttons.dart';
+import 'controller/SessionController.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,12 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Link Food',
-      initialRoute: '/',
-      routes: routes(),
-      theme: ThemeData(primarySwatch: Colors.green, accentColor: Colors.blue),
-      home: MyHomePage(title: 'Link Food'),
-    );
+        title: 'Link Food',
+        initialRoute: '/',
+        routes: routes(),
+        theme: ThemeData(primarySwatch: Colors.green, accentColor: Colors.blue),
+        home: MyHomePage(title: 'Link Food'),
+        builder: EasyLoading.init());
   }
 }
 
@@ -33,6 +34,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  SessionController _sessionController = SessionController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+
   void _callRegister({required context}) {
     Navigator.pushNamed(context, '/register');
   }
@@ -60,9 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 32.0, bottom: 16),
-                child: input(context: context, lable: 'email'),
+                child:
+                    input(context: context, lable: 'email', controller: _email),
               ),
-              input(context: context, lable: 'senha'),
+              input(context: context, lable: 'senha', controller: _password),
               Padding(
                 padding:
                     const EdgeInsets.only(top: 64.0, left: 16.0, right: 16.0),
@@ -70,7 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     context: context,
                     lable: 'Login',
                     call: () {
-                      _callInitial(context: context);
+                      //_callInitial(context: context);
+                      _sessionController.login(
+                          email: _email.text, password: _password.text);
                     },
                     textStyle: TextStyle(fontSize: 18)),
               ),
