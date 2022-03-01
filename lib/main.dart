@@ -78,7 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     call: () {
                       //_callInitial(context: context);
                       _sessionController.login(
-                          email: _email.text, password: _password.text);
+                          email: _email.text,
+                          password: _password.text,
+                          context: context);
                     },
                     textStyle: TextStyle(fontSize: 18)),
               ),

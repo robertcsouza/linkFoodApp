@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:linkfood/models/User.dart';
 
 class SessionController {
   BaseOptions options = new BaseOptions(
@@ -9,7 +11,7 @@ class SessionController {
 
   SessionController() {}
 
-  login({String? email, String? password}) async {
+  login({String? email, String? password, context}) async {
     try {
       EasyLoading.show(status: 'Caregando...');
 
@@ -19,7 +21,12 @@ class SessionController {
       Future.delayed(Duration(seconds: 2), () {
         EasyLoading.showSuccess('Login efetuado com suecesso');
       });
-      return response.data;
+
+      User user = User.fromApi(response);
+
+      user.isAdmin == true
+          ? null
+          : Navigator.pushReplacementNamed(context, '/initial');
     } catch (erro) {
       Future.delayed(Duration(seconds: 2), () {
         EasyLoading.showError('Nao foi possivel fazer login');
