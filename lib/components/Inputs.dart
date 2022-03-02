@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import '../assets/Colors.dart' as projectColor;
 
-Widget input({TextEditingController? controller, String? lable, context}) {
+Widget input(
+    {TextEditingController? controller,
+    String? lable,
+    required bool obscure,
+    context}) {
   return Padding(
     padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
     child: Container(
@@ -11,6 +15,7 @@ Widget input({TextEditingController? controller, String? lable, context}) {
           color: projectColor.gray,
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: TextField(
+        obscureText: obscure,
         controller: controller,
         decoration: InputDecoration(
             border: InputBorder.none,

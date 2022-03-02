@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/components/bottomNavigator.dart';
+import 'package:linkfood/controller/bannerController.dart';
+import 'package:linkfood/models/BannerInfo.dart';
 
 class Initial extends StatefulWidget {
   const Initial({Key? key}) : super(key: key);
@@ -11,6 +14,7 @@ class Initial extends StatefulWidget {
 }
 
 class _InitialState extends State<Initial> {
+  BannerController bannerController = BannerController();
   String endereco = 'Benedito Inocêncio 4444';
   List images = [1, 2, 3];
   double rating = 4.6;
@@ -18,6 +22,11 @@ class _InitialState extends State<Initial> {
 
   _callRoute() {
     Navigator.pushNamed(context, '/store');
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -141,26 +150,40 @@ class _InitialState extends State<Initial> {
   }
 
   Widget _carousel() {
-    return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 150.0,
-        child: CarouselSlider(
-          options: CarouselOptions(height: 400.0),
-          items: images.map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(color: Colors.amber),
-                    child: Text(
-                      'text $i',
-                      style: TextStyle(fontSize: 16.0),
-                    ));
-              },
-            );
-          }).toList(),
-        ));
+    return FutureBuilder(
+        future: bannerController.index(),
+        builder: (context, snapshot) {
+          if (ConnectionState.waiting == snapshot.connectionState) {
+            return SizedBox();
+          } else {
+            List banners = snapshot.data as List;
+
+            return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 150.0,
+                child: CarouselSlider(
+                  options: CarouselOptions(height: 400.0),
+                  items: banners.map((item) {
+                    BannerInfo banner = item;
+                    List split = banner.url!.split('/');
+                    String url = 'http://192.168.100.9:3050/files/${split[4]}';
+
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 0.5),
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: CachedNetworkImage(
+                              imageUrl: url,
+                              fit: BoxFit.fill,
+                            ));
+                      },
+                    );
+                  }).toList(),
+                ));
+          }
+        });
   }
 }
 

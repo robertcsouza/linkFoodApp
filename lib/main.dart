@@ -65,10 +65,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 32.0, bottom: 16),
-                child:
-                    input(context: context, lable: 'email', controller: _email),
+                child: input(
+                    context: context,
+                    lable: 'email',
+                    controller: _email,
+                    obscure: false),
               ),
-              input(context: context, lable: 'senha', controller: _password),
+              input(
+                  context: context,
+                  lable: 'senha',
+                  controller: _password,
+                  obscure: true),
               Padding(
                 padding:
                     const EdgeInsets.only(top: 64.0, left: 16.0, right: 16.0),

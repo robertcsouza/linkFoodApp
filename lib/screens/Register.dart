@@ -40,17 +40,17 @@ class _RegisterState extends State<Register> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                child: input(context: context, lable: 'Nome'),
+                child: input(context: context, lable: 'Nome', obscure: false),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                child: input(context: context, lable: 'email'),
+                child: input(context: context, lable: 'email', obscure: false),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                child: input(context: context, lable: 'senha'),
+                child: input(context: context, lable: 'senha', obscure: true),
               ),
-              input(context: context, lable: 'Confirmar Senha'),
+              input(context: context, lable: 'Confirmar Senha', obscure: true),
               Padding(
                 padding:
                     const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
