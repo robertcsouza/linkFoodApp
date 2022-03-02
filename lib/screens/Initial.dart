@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/components/bottomNavigator.dart';
+import 'package:linkfood/controller/RestaurantsController.dart';
 import 'package:linkfood/controller/bannerController.dart';
 import 'package:linkfood/models/BannerInfo.dart';
+import 'package:linkfood/models/Restaurant.dart';
 
 class Initial extends StatefulWidget {
   const Initial({Key? key}) : super(key: key);
@@ -14,11 +17,15 @@ class Initial extends StatefulWidget {
 }
 
 class _InitialState extends State<Initial> {
-  BannerController bannerController = BannerController();
+  BannerController _bannerController = BannerController();
+  RestaurantController _restaurantController = RestaurantController();
+  late Future rest;
+  late Future ban;
   String endereco = 'Benedito Inocêncio 4444';
-  List images = [1, 2, 3];
   double rating = 4.6;
   bool toggle = false;
+  List restaurants = [];
+  List banners = [];
 
   _callRoute() {
     Navigator.pushNamed(context, '/store');
@@ -27,6 +34,8 @@ class _InitialState extends State<Initial> {
   @override
   void initState() {
     super.initState();
+    rest = _restaurantController.index();
+    ban = _bannerController.index();
   }
 
   @override
@@ -61,7 +70,7 @@ class _InitialState extends State<Initial> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-            child: images.isNotEmpty ? _carousel() : SizedBox(),
+            child: _carousel(),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16.0, left: 16),
@@ -76,7 +85,7 @@ class _InitialState extends State<Initial> {
     );
   }
 
-  Widget _cardLojas() {
+  Widget _cardLojas(Restaurant restaurant) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
@@ -140,23 +149,34 @@ class _InitialState extends State<Initial> {
   }
 
   Widget _listLojas() {
-    return Expanded(
-        child: ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return _cardLojas();
-      },
-    ));
+    return FutureBuilder(
+        future: rest,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (ConnectionState.waiting == snapshot.connectionState) {
+            EasyLoading.show();
+            return SizedBox();
+          } else {
+            EasyLoading.dismiss();
+            restaurants = snapshot.data as List;
+            return Expanded(
+                child: ListView.builder(
+              itemCount: restaurants.length,
+              itemBuilder: (context, index) {
+                return _cardLojas(restaurants[index]);
+              },
+            ));
+          }
+        });
   }
 
   Widget _carousel() {
     return FutureBuilder(
-        future: bannerController.index(),
+        future: ban,
         builder: (context, snapshot) {
           if (ConnectionState.waiting == snapshot.connectionState) {
             return SizedBox();
           } else {
-            List banners = snapshot.data as List;
+            banners = snapshot.data as List;
 
             return SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -186,70 +206,3 @@ class _InitialState extends State<Initial> {
         });
   }
 }
-
-/*
-
-Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                        child: Container(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset('images/dominos.png'))),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        'Dominos pizzaria',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800]),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 24,
-                          ),
-                          Text(
-                            rating.toString(),
-                            style: TextStyle(color: Colors.amber, fontSize: 16),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              'Restaurante',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-            ],
-          )
-
-
- */
