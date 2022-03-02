@@ -1,14 +1,35 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:linkfood/assets/Colors.dart';
+import 'package:linkfood/controller/ProductController.dart';
+import 'package:linkfood/models/Product.dart';
+import 'package:linkfood/models/Restaurant.dart';
 
 class Store extends StatefulWidget {
-  const Store({Key? key}) : super(key: key);
+  late Restaurant restaurant;
+  Store({required Restaurant rest}) {
+    this.restaurant = rest;
+  }
 
   @override
   _StoreState createState() => _StoreState();
 }
 
 class _StoreState extends State<Store> {
+  late Restaurant _restaurant;
+  ProductController _productController = ProductController();
+  late Future productFuture;
+  List products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _restaurant = widget.restaurant;
+
+    productFuture = _productController.index(storeId: _restaurant.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,8 +51,8 @@ class _StoreState extends State<Store> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
-                child: Image.asset(
-                  'images/dominos.png',
+                child: CachedNetworkImage(
+                  imageUrl: _restaurant.thumbnail,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -59,16 +80,27 @@ class _StoreState extends State<Store> {
   }
 
   Widget _listProducts() {
-    return Expanded(
-        child: ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return _cardProducts();
-      },
-    ));
+    return FutureBuilder(
+        future: productFuture,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (ConnectionState.waiting == snapshot.connectionState) {
+            EasyLoading.show();
+            return SizedBox();
+          } else {
+            EasyLoading.dismiss();
+            products = snapshot.data;
+            return Expanded(
+                child: ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return _cardProducts(products[index]);
+              },
+            ));
+          }
+        });
   }
 
-  Widget _cardProducts() {
+  Widget _cardProducts(Product product) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
@@ -83,11 +115,11 @@ class _StoreState extends State<Store> {
                 child: Container(
                     width: 90,
                     height: 90,
-                    child: Image.asset('images/pizza.jpg'))),
+                    child: CachedNetworkImage(imageUrl: product.thumbnail))),
             title: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                'Pizza Calabresa Grande',
+                product.name,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.grey[800]),
               ),
@@ -97,9 +129,9 @@ class _StoreState extends State<Store> {
               children: [
                 Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Mussarela,Calabresa,requeijão,cebola,azeite')),
+                    child: Text(product.description)),
                 Text(
-                  'R\$ 39.90',
+                  'R\$ ${product.price}',
                   style: TextStyle(color: primary, fontWeight: FontWeight.bold),
                 )
               ],
@@ -116,14 +148,14 @@ class _StoreState extends State<Store> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              'Dominos Pizzaria',
+              _restaurant.name,
               style: TextStyle(fontSize: 18),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              '30-40 min   R\$ 7.00',
+              '${_restaurant.duration}   R\$ ${_restaurant.freight.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 18),
             ),
           )

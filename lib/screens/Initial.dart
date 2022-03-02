@@ -8,6 +8,7 @@ import 'package:linkfood/controller/RestaurantsController.dart';
 import 'package:linkfood/controller/bannerController.dart';
 import 'package:linkfood/models/BannerInfo.dart';
 import 'package:linkfood/models/Restaurant.dart';
+import 'package:linkfood/screens/Store.dart';
 
 class Initial extends StatefulWidget {
   const Initial({Key? key}) : super(key: key);
@@ -27,8 +28,11 @@ class _InitialState extends State<Initial> {
   List restaurants = [];
   List banners = [];
 
-  _callRoute() {
-    Navigator.pushNamed(context, '/store');
+  _callRoute(Restaurant restaurant) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Store(rest: restaurant)),
+    );
   }
 
   @override
@@ -93,16 +97,17 @@ class _InitialState extends State<Initial> {
           height: 100,
           child: ListTile(
             onTap: () {
-              _callRoute();
+              _callRoute(restaurant);
             },
             leading: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(100)),
                 child: Container(
                     width: 50,
                     height: 50,
-                    child: Image.asset('images/dominos.png'))),
+                    child: CachedNetworkImage(
+                        imageUrl: restaurant.thumbnail, fit: BoxFit.fill))),
             title: Text(
-              'Dominos pizzaria',
+              restaurant.name,
               style: TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.grey[800]),
             ),
