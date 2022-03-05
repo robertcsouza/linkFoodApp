@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/components/CircleName.dart';
 import 'package:linkfood/components/bottomNavigator.dart';
 import 'package:linkfood/components/buttons.dart';
+import 'package:linkfood/controller/UserController.dart';
+import 'package:linkfood/models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Perfil extends StatefulWidget {
   @override
@@ -13,8 +17,10 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+  UserController _userController = UserController();
+  GetIt getIt = GetIt.instance;
   ImagePicker imagePicker = ImagePicker();
-  String userName = ' ';
+  late User _user;
 
   File? tmp;
   File? image;
@@ -38,15 +44,25 @@ class _PerfilState extends State<Perfil> {
       });
 
       String fileName = image!.path.split('/').last;
-      _uploadImage(fileName: fileName);
+
+      _uploadImage(fileName: fileName, file: img);
     }
   }
 
-  _uploadImage({String? fileName}) {}
+  _uploadImage({required String fileName, required File file}) {
+    _userController.uploadThumbnail(file: file, fileName: fileName);
+  }
+
+  _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', '');
+    Navigator.pushReplacementNamed(context, '/');
+  }
 
   @override
   void initState() {
     super.initState();
+    _user = getIt<User>();
   }
 
   @override
@@ -101,8 +117,18 @@ class _PerfilState extends State<Perfil> {
                 )
               : SizedBox(),
           Text(
-            userName,
+            _user.name,
+            style: TextStyle(fontSize: 16),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0),
+            child: btText(
+                lable: 'Sair',
+                context: context,
+                call: () {
+                  _logout();
+                }),
+          )
         ],
       ),
     );
@@ -132,37 +158,25 @@ class _PerfilState extends State<Perfil> {
   }
 
   Widget _cachedImage({thumbnail, name}) {
-    return urlImage == null
-        ? Container(
-            decoration: BoxDecoration(
-                color: Colors.grey,
-                border: Border.all(width: 4, color: Colors.white),
-                borderRadius: BorderRadius.all(Radius.circular(100))),
-            width: 100,
-            height: 100,
-            child: Icon(
-              Icons.person,
-              size: 64,
-              color: Colors.white,
-            ))
-        : Container(
-            decoration: BoxDecoration(
-                color: Colors.grey,
-                border: Border.all(width: 4, color: Colors.white),
-                borderRadius: BorderRadius.all(Radius.circular(100))),
-            width: 100,
-            height: 100,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100.0),
-              child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return CircularProgressIndicator();
-                  },
-                  imageUrl: urlImage,
-                  errorWidget: (context, url, error) {
-                    return circleNamed('Roberto');
-                  }),
-            ));
+    print(_user.thumbnail);
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.grey,
+            border: Border.all(width: 4, color: Colors.white),
+            borderRadius: BorderRadius.all(Radius.circular(100))),
+        width: 100,
+        height: 100,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100.0),
+          child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              placeholder: (context, url) {
+                return CircularProgressIndicator();
+              },
+              imageUrl: _user.thumbnail,
+              errorWidget: (context, url, error) {
+                return circleNamed(_user.name);
+              }),
+        ));
   }
 }
