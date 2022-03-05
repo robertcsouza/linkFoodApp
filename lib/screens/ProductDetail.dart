@@ -1,14 +1,61 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:linkfood/assets/Colors.dart';
+import 'package:linkfood/models/Product.dart';
+import 'package:linkfood/models/Restaurant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({Key? key}) : super(key: key);
+  late Restaurant restaurant;
+  late Product product;
+  ProductDetail({Restaurant? restaurant, Product? product}) {
+    this.restaurant = restaurant!;
+    this.product = product!;
+  }
 
   @override
   _ProductDetailState createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  List<String>? _cart = [];
+  double _totalProduct = 0;
+  _increment(int quantity) {
+    _totalProduct = (widget.product.price * quantity);
+  }
+
+  _setOnCart(
+      {required Product product,
+      required int quanty,
+      required Restaurant restaurant}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    _cart = await prefs.getStringList('cart') != null
+        ? prefs.getStringList('cart')
+        : [];
+
+    Map productTocart = {
+      'product': product.id,
+      'quanty': quanty,
+      'restaurant': restaurant.id
+    };
+    String productToSave = jsonEncode(productTocart);
+    _cart!.add(productToSave);
+    prefs.setStringList('cart', _cart!);
+
+    EasyLoading.showSuccess('Produto adicionado no carrinho');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _totalProduct = widget.product.price;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +64,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   bool toggle = false;
-  int quant = 0;
+  int quant = 1;
   Widget _body() {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -49,7 +96,7 @@ class _ProductDetailState extends State<ProductDetail> {
             Padding(
               padding: const EdgeInsets.only(left: 32.0, top: 32.0),
               child: Text(
-                'R\$ 39.90',
+                'R\$ ${widget.product.price.toStringAsFixed(2)}',
                 style: TextStyle(
                     fontSize: 18, fontWeight: FontWeight.bold, color: primary),
               ),
@@ -91,7 +138,8 @@ class _ProductDetailState extends State<ProductDetail> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          quant <= 0 ? quant = 0 : quant--;
+                          quant <= 1 ? quant = 1 : quant--;
+                          _increment(quant);
                         });
                       },
                       icon: Icon(
@@ -112,6 +160,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       onPressed: () {
                         setState(() {
                           quant++;
+                          _increment(quant);
                         });
                       },
                       icon: Icon(
@@ -131,10 +180,15 @@ class _ProductDetailState extends State<ProductDetail> {
                 width: 200,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _setOnCart(
+                        product: widget.product,
+                        quanty: quant,
+                        restaurant: widget.restaurant);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Adicionar'), Text('R\$ 39.9')],
+                    children: [Text('Adicionar'), Text('R\$ ${_totalProduct}')],
                   ),
                   style: ButtonStyle(
                       backgroundColor:
@@ -204,7 +258,8 @@ class _ProductDetailState extends State<ProductDetail> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: Text('Dominos Pizzaria', style: TextStyle(fontSize: 16)),
+                child: Text(widget.restaurant.name,
+                    style: TextStyle(fontSize: 16)),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -235,12 +290,13 @@ class _ProductDetailState extends State<ProductDetail> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: Text('30-40 min ', style: TextStyle(fontSize: 16)),
+                child: Text(widget.restaurant.duration,
+                    style: TextStyle(fontSize: 16)),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'R\$ 7.00',
+                  'R\$ ${widget.restaurant.freight.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 16),
                 ),
               )
@@ -259,14 +315,14 @@ class _ProductDetailState extends State<ProductDetail> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              'Pizza Calabresa Grande',
+              widget.product.name,
               style: TextStyle(fontSize: 20),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Mussarela,calabresa,requeij��o,cebola azeite',
+              widget.product.description,
               style: TextStyle(fontSize: 16),
             ),
           )

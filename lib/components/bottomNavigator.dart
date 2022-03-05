@@ -7,7 +7,7 @@ _redirect(index, context) {
       Navigator.pushNamed(context, '/initial');
       break;
     case 1:
-      Navigator.pushNamed(context, '/initial');
+      Navigator.pushNamed(context, '/cart');
       break;
     case 2:
       Navigator.pushNamed(context, '/perfil');
@@ -25,8 +25,8 @@ BottomNavigationBar bottomNavigatior({required int index, required context}) {
         backgroundColor: Colors.red,
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.business),
-        label: 'Pedidos',
+        icon: Icon(Icons.shopping_cart),
+        label: 'Carrinho',
         backgroundColor: Colors.green,
       ),
       BottomNavigationBarItem(

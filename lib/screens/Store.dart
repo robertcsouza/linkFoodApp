@@ -5,6 +5,7 @@ import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/controller/ProductController.dart';
 import 'package:linkfood/models/Product.dart';
 import 'package:linkfood/models/Restaurant.dart';
+import 'package:linkfood/screens/ProductDetail.dart';
 
 class Store extends StatefulWidget {
   late Restaurant restaurant;
@@ -21,6 +22,17 @@ class _StoreState extends State<Store> {
   ProductController _productController = ProductController();
   late Future productFuture;
   List products = [];
+
+  _callRoute({Restaurant? restaurant, Product? product}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductDetail(
+                restaurant: restaurant,
+                product: product,
+              )),
+    );
+  }
 
   @override
   void initState() {
@@ -108,7 +120,7 @@ class _StoreState extends State<Store> {
           height: 100,
           child: ListTile(
             onTap: () {
-              Navigator.pushNamed(context, '/product/detail');
+              _callRoute(product: product, restaurant: widget.restaurant);
             },
             leading: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(10)),

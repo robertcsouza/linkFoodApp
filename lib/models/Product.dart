@@ -5,6 +5,7 @@ class Product {
   late String _restaurant;
   late String _thumbnail;
   late String _description;
+  late String _observation;
 
   Product(
       {required String id,
@@ -55,5 +56,11 @@ class Product {
 
   set description(String description) {
     _description = description;
+  }
+
+  String get observation => _observation;
+
+  set observation(String observation) {
+    _observation = observation;
   }
 }
