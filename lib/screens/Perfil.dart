@@ -158,7 +158,6 @@ class _PerfilState extends State<Perfil> {
   }
 
   Widget _cachedImage({thumbnail, name}) {
-    print(_user.thumbnail);
     return Container(
         decoration: BoxDecoration(
             color: Colors.grey,

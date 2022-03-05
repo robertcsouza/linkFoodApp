@@ -4,7 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_it/get_it.dart';
 import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/components/buttons.dart';
+import 'package:linkfood/controller/PedidosController.dart';
 import 'package:linkfood/models/CartProducts.dart';
+import 'package:linkfood/models/Pedido.dart';
 import 'package:linkfood/models/Product.dart';
 import 'package:linkfood/models/User.dart';
 
@@ -18,6 +20,8 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   GetIt getIt = GetIt.instance;
   List<Product> _listproduct = [];
+  List<String> _productsOrder = [];
+  PedidosController _pedidosController = PedidosController();
   late User _user;
   double _total = 0;
   @override
@@ -27,6 +31,19 @@ class _CartState extends State<Cart> {
     _listproduct = getIt<CartProducts>().productsCart;
     _user = getIt<User>();
     _calculateTotal();
+  }
+
+  _makeOrder() {
+    _listproduct.forEach((element) {
+      _productsOrder.add(element.id);
+    });
+    Pedido _pedido = Pedido(
+        user: getIt<User>().id,
+        restaurant: getIt<CartProducts>().restaurantId,
+        products: _productsOrder,
+        total: _total);
+
+    _pedidosController.create(pedido: _pedido);
   }
 
   _calculateTotal() {
@@ -104,8 +121,12 @@ class _CartState extends State<Cart> {
           SafeArea(
               child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child:
-                btPrimary(lable: 'Fazer pedido', context: context, call: () {}),
+            child: btPrimary(
+                lable: 'Fazer pedido',
+                context: context,
+                call: () {
+                  _makeOrder();
+                }),
           ))
         ],
       ),

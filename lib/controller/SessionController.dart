@@ -38,6 +38,7 @@ class SessionController {
       _userIt.district = user.district;
       _userIt.references = user.references;
       _userIt.email = user.email;
+      _userIt.id = user.id;
 
       user.isAdmin == true
           ? null

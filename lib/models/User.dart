@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-
 class User {
   String _name = '';
   bool _isAdmin = false;
-  late String _thumbnail;
+  late String _thumbnail = '';
   late String _street;
   late int _number;
   late String _district;
@@ -11,6 +9,7 @@ class User {
   late String _email;
   late String _senha;
   late String _confirmarSenha;
+  late String _id;
 
   User(
       {required String name,
@@ -85,8 +84,15 @@ class User {
     _senha = senha;
   }
 
+  String get id => _id;
+
+  set id(String id) {
+    _id = id;
+  }
+
   User.fromApi(dynamic response) {
     print(response);
+    this._id = response.data['result']['_id'];
     this._name = response.data['result']['name'];
     this.isAdmin = response.data['result']['isAdmin'];
     this._thumbnail = response.data['result']['thumbnail'];
