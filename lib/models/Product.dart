@@ -6,6 +6,7 @@ class Product {
   late String _thumbnail;
   late String _description;
   late String _observation;
+  late int _quant;
 
   Product(
       {required String id,
@@ -62,5 +63,11 @@ class Product {
 
   set observation(String observation) {
     _observation = observation;
+  }
+
+  int get quant => _quant;
+
+  set quant(int quant) {
+    _quant = quant;
   }
 }

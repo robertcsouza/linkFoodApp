@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get_it/get_it.dart';
 import 'package:linkfood/assets/Colors.dart';
+import 'package:linkfood/models/CartProducts.dart';
 import 'package:linkfood/models/Product.dart';
 import 'package:linkfood/models/Restaurant.dart';
+import 'package:linkfood/screens/Cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -20,6 +23,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  GetIt getIt = GetIt.instance;
   List<String>? _cart = [];
   double _totalProduct = 0;
   _increment(int quantity) {
@@ -29,22 +33,12 @@ class _ProductDetailState extends State<ProductDetail> {
   _setOnCart(
       {required Product product,
       required int quanty,
-      required Restaurant restaurant}) async {
-    final prefs = await SharedPreferences.getInstance();
+      required Restaurant restaurant}) {
+    CartProducts _cart = getIt<CartProducts>();
+    Product p = product;
+    p.quant = quanty;
 
-    _cart = await prefs.getStringList('cart') != null
-        ? prefs.getStringList('cart')
-        : [];
-
-    Map productTocart = {
-      'product': product.id,
-      'quanty': quanty,
-      'restaurant': restaurant.id
-    };
-    String productToSave = jsonEncode(productTocart);
-    _cart!.add(productToSave);
-    prefs.setStringList('cart', _cart!);
-
+    _cart.productsCart.add(p);
     EasyLoading.showSuccess('Produto adicionado no carrinho');
   }
 
