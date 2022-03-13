@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RestaurantController {
   BaseOptions options = new BaseOptions(
-    baseUrl: "http://192.168.100.9:3050",
+    baseUrl: "https://linkfoodapi.herokuapp.com",
     connectTimeout: 5000,
   );
 
