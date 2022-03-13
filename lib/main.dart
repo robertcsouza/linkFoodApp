@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:linkfood/config/Routes.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:linkfood/models/CartProducts.dart';
+import 'package:linkfood/models/User.dart';
 import '../assets/Colors.dart' as projectColor;
 import 'package:flutter/material.dart';
 import 'package:linkfood/components/Inputs.dart';
@@ -11,6 +12,9 @@ import 'controller/SessionController.dart';
 GetIt getIt = GetIt.instance;
 void main() {
   getIt.registerSingleton<CartProducts>(CartProducts(), signalsReady: true);
+  getIt.registerSingleton<User>(
+      User(name: '', street: '', number: 0, district: '', references: ''),
+      signalsReady: true);
   runApp(MyApp());
 }
 

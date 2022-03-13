@@ -37,6 +37,8 @@ class _ProductDetailState extends State<ProductDetail> {
     CartProducts _cart = getIt<CartProducts>();
     Product p = product;
     p.quant = quanty;
+    p.restaurant = restaurant.id;
+    _cart.restaurantId = restaurant.id;
 
     _cart.productsCart.add(p);
     EasyLoading.showSuccess('Produto adicionado no carrinho');

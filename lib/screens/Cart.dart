@@ -4,8 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_it/get_it.dart';
 import 'package:linkfood/assets/Colors.dart';
 import 'package:linkfood/components/buttons.dart';
+import 'package:linkfood/controller/PedidosController.dart';
 import 'package:linkfood/models/CartProducts.dart';
+import 'package:linkfood/models/Pedido.dart';
 import 'package:linkfood/models/Product.dart';
+import 'package:linkfood/models/User.dart';
 
 class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
@@ -17,13 +20,30 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   GetIt getIt = GetIt.instance;
   List<Product> _listproduct = [];
+  List<String> _productsOrder = [];
+  PedidosController _pedidosController = PedidosController();
+  late User _user;
   double _total = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _listproduct = getIt<CartProducts>().productsCart;
+    _user = getIt<User>();
     _calculateTotal();
+  }
+
+  _makeOrder() {
+    _listproduct.forEach((element) {
+      _productsOrder.add(element.id);
+    });
+    Pedido _pedido = Pedido(
+        user: getIt<User>().id,
+        restaurant: getIt<CartProducts>().restaurantId,
+        products: _productsOrder,
+        total: _total);
+
+    _pedidosController.create(pedido: _pedido);
   }
 
   _calculateTotal() {
@@ -101,8 +121,12 @@ class _CartState extends State<Cart> {
           SafeArea(
               child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child:
-                btPrimary(lable: 'Fazer pedido', context: context, call: () {}),
+            child: btPrimary(
+                lable: 'Fazer pedido',
+                context: context,
+                call: () {
+                  _makeOrder();
+                }),
           ))
         ],
       ),
@@ -171,11 +195,11 @@ class _CartState extends State<Cart> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 4.0),
-              child: Text('Benedito Inocêncio 4444'),
+              child: Text('${_user.street} ${_user.number}'),
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Text('Socialista'),
+              child: Text(_user.district),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -186,7 +210,7 @@ class _CartState extends State<Cart> {
             ),
             Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Text('Ao lado da serralheria Ferrari'),
+              child: Text(_user.references),
             ),
           ],
         ),
